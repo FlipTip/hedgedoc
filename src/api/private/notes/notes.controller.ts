@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2021 The HedgeDoc developers (see AUTHORS file)
+ * SPDX-FileCopyrightText: 2022 The HedgeDoc developers (see AUTHORS file)
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
@@ -14,7 +14,13 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiConflictResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 import { HistoryService } from '../../../history/history.service';
 import { SessionGuard } from '../../../identity/session.guard';
@@ -32,6 +38,12 @@ import { RevisionDto } from '../../../revisions/revision.dto';
 import { RevisionsService } from '../../../revisions/revisions.service';
 import { User } from '../../../users/user.entity';
 import { UsersService } from '../../../users/users.service';
+import {
+  conflictDescription,
+  internalServerErrorDescription,
+  notFoundDescription,
+  unauthorizedDescription,
+} from '../../utils/descriptions';
 import { GetNoteInterceptor } from '../../utils/get-note.interceptor';
 import { MarkdownBody } from '../../utils/markdownbody-decorator';
 import { PermissionsGuard } from '../../utils/permissions.guard';
@@ -54,6 +66,7 @@ export class NotesController {
   }
 
   @Get(':noteIdOrAlias')
+  @ApiUnauthorizedResponse({ description: unauthorizedDescription })
   @Permissions(Permission.READ)
   @UseInterceptors(GetNoteInterceptor)
   @UseGuards(PermissionsGuard)
@@ -66,6 +79,7 @@ export class NotesController {
   }
 
   @Get(':noteIdOrAlias/media')
+  @ApiUnauthorizedResponse({ description: unauthorizedDescription })
   @Permissions(Permission.READ)
   @UseInterceptors(GetNoteInterceptor)
   @UseGuards(PermissionsGuard)
@@ -78,6 +92,7 @@ export class NotesController {
 
   @Post()
   @HttpCode(201)
+  @ApiUnauthorizedResponse({ description: unauthorizedDescription })
   @Permissions(Permission.CREATE)
   @UseGuards(PermissionsGuard)
   async createNote(
@@ -92,6 +107,9 @@ export class NotesController {
 
   @Post(':noteAlias')
   @HttpCode(201)
+  @ApiConflictResponse({ description: conflictDescription })
+  @ApiUnauthorizedResponse({ description: unauthorizedDescription })
+  @ApiNotFoundResponse({ description: notFoundDescription })
   @Permissions(Permission.CREATE)
   @UseGuards(PermissionsGuard)
   async createNamedNote(
@@ -107,6 +125,11 @@ export class NotesController {
 
   @Delete(':noteIdOrAlias')
   @HttpCode(204)
+  @ApiUnauthorizedResponse({ description: unauthorizedDescription })
+  @ApiNotFoundResponse({ description: notFoundDescription })
+  @ApiInternalServerErrorResponse({
+    description: internalServerErrorDescription,
+  })
   @Permissions(Permission.OWNER)
   @UseInterceptors(GetNoteInterceptor)
   @UseGuards(PermissionsGuard)
@@ -130,6 +153,8 @@ export class NotesController {
   }
 
   @Get(':noteIdOrAlias/revisions')
+  @ApiUnauthorizedResponse({ description: unauthorizedDescription })
+  @ApiNotFoundResponse({ description: notFoundDescription })
   @Permissions(Permission.READ)
   @UseInterceptors(GetNoteInterceptor)
   @UseGuards(PermissionsGuard)
@@ -147,6 +172,8 @@ export class NotesController {
 
   @Delete(':noteIdOrAlias/revisions')
   @HttpCode(204)
+  @ApiUnauthorizedResponse({ description: unauthorizedDescription })
+  @ApiNotFoundResponse({ description: notFoundDescription })
   @Permissions(Permission.READ)
   @UseInterceptors(GetNoteInterceptor)
   @UseGuards(PermissionsGuard)
@@ -167,6 +194,8 @@ export class NotesController {
   }
 
   @Get(':noteIdOrAlias/revisions/:revisionId')
+  @ApiUnauthorizedResponse({ description: unauthorizedDescription })
+  @ApiNotFoundResponse({ description: notFoundDescription })
   @Permissions(Permission.READ)
   @UseInterceptors(GetNoteInterceptor)
   @UseGuards(PermissionsGuard)
