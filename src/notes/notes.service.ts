@@ -348,11 +348,7 @@ export class NotesService {
   ): Promise<Note> {
     const permissions = await note.userPermissions;
     const permission = permissions.find(
-      (
-        value: NoteUserPermission,
-        index: number,
-        _obj: NoteUserPermission[],
-      ) => {
+      (value: NoteUserPermission, index: number) => {
         if (value.user.id == permissionUser.id) {
           if (value.canEdit != canEdit) {
             value.canEdit = canEdit;
@@ -383,11 +379,7 @@ export class NotesService {
   async removeUserPermission(note: Note, permissionUser: User): Promise<Note> {
     const permissions = await note.userPermissions;
     const permissionsFiltered = permissions.filter(
-      (
-        value: NoteUserPermission,
-        _index: number,
-        _obj: NoteUserPermission[],
-      ) => {
+      (value: NoteUserPermission) => {
         return value.user.id != permissionUser.id;
       },
     );
@@ -410,11 +402,7 @@ export class NotesService {
   ): Promise<Note> {
     const permissions = await note.groupPermissions;
     const permission = permissions.find(
-      (
-        value: NoteGroupPermission,
-        index: number,
-        _obj: NoteGroupPermission[],
-      ) => {
+      (value: NoteGroupPermission, index: number) => {
         if (value.group.id == permissionGroup.id) {
           if (value.canEdit != canEdit) {
             value.canEdit = canEdit;
@@ -448,11 +436,7 @@ export class NotesService {
   ): Promise<Note> {
     const permissions = await note.groupPermissions;
     const permissionsFiltered = permissions.filter(
-      (
-        value: NoteGroupPermission,
-        _index: number,
-        _obj: NoteGroupPermission[],
-      ) => {
+      (value: NoteGroupPermission) => {
         return value.group.id != permissionGroup.id;
       },
     );
