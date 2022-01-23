@@ -145,7 +145,7 @@ describe('History', () => {
           .post('/api/private/me/history')
           .set('Content-Type', 'application/json')
           .send(JSON.stringify({ history: [brokenEntryDto] }))
-          .expect(400);
+          .expect(409);
       });
       it('with non-existing note', async () => {
         const brokenEntryDto = new HistoryEntryImportDto();
@@ -156,7 +156,7 @@ describe('History', () => {
           .post('/api/private/me/history')
           .set('Content-Type', 'application/json')
           .send(JSON.stringify({ history: [brokenEntryDto] }))
-          .expect(400);
+          .expect(404);
       });
       afterEach(async () => {
         const historyEntries = await testSetup.historyService.getEntriesByUser(

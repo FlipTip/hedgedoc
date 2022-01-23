@@ -66,7 +66,7 @@ describe('Alias', () => {
             noteIdOrAlias: testAlias,
             newAlias: 'testAlias1',
           })
-          .expect(400);
+          .expect(409);
       });
       it('because of a forbidden alias', async () => {
         await request(testSetup.app.getHttpServer())
@@ -77,7 +77,7 @@ describe('Alias', () => {
             noteIdOrAlias: testAlias,
             newAlias: forbiddenNoteId,
           })
-          .expect(400);
+          .expect(409);
       });
       it('because of a alias that is a public id', async () => {
         await request(testSetup.app.getHttpServer())
@@ -88,7 +88,7 @@ describe('Alias', () => {
             noteIdOrAlias: testAlias,
             newAlias: publicId,
           })
-          .expect(400);
+          .expect(409);
       });
       it('because the user is not an owner', async () => {
         await request(testSetup.app.getHttpServer())
@@ -146,7 +146,7 @@ describe('Alias', () => {
           .set('Authorization', `Bearer ${testSetup.authTokens[0].secret}`)
           .set('Content-Type', 'application/json')
           .send(changeAliasDto)
-          .expect(400);
+          .expect(404);
       });
       it('if the user is not an owner', async () => {
         await request(testSetup.app.getHttpServer())
@@ -195,7 +195,7 @@ describe('Alias', () => {
       await request(testSetup.app.getHttpServer())
         .delete(`/api/v2/alias/${forbiddenNoteId}`)
         .set('Authorization', `Bearer ${testSetup.authTokens[0].secret}`)
-        .expect(400);
+        .expect(404);
     });
 
     it('errors if the user is not the owner', async () => {
@@ -216,8 +216,7 @@ describe('Alias', () => {
       await request(testSetup.app.getHttpServer())
         .delete(`/api/v2/alias/${testAlias}`)
         .set('Authorization', `Bearer ${testSetup.authTokens[0].secret}`)
-        .expect(400);
-
+        .expect(422);
       await request(testSetup.app.getHttpServer())
         .get(`/api/v2/notes/${secondAlias}`)
         .set('Authorization', `Bearer ${testSetup.authTokens[0].secret}`)

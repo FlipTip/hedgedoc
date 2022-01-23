@@ -80,7 +80,7 @@ describe('Notes', () => {
       await request(testSetup.app.getHttpServer())
         .get('/api/v2/notes/forbiddenNoteId')
         .expect('Content-Type', /json/)
-        .expect(400);
+        .expect(404);
     });
   });
 
@@ -108,7 +108,7 @@ describe('Notes', () => {
         .set('Content-Type', 'text/markdown')
         .send(content)
         .expect('Content-Type', /json/)
-        .expect(400);
+        .expect(409);
     });
 
     it('fails with a existing alias', async () => {
@@ -117,7 +117,7 @@ describe('Notes', () => {
         .set('Content-Type', 'text/markdown')
         .send(content)
         .expect('Content-Type', /json/)
-        .expect(400);
+        .expect(409);
     });
   });
 
@@ -222,7 +222,7 @@ describe('Notes', () => {
     it('fails with a forbidden alias', async () => {
       await request(testSetup.app.getHttpServer())
         .delete(`/api/v2/notes/${forbiddenNoteId}`)
-        .expect(400);
+        .expect(404);
     });
     it('fails with a non-existing alias', async () => {
       await request(testSetup.app.getHttpServer())
@@ -252,7 +252,7 @@ describe('Notes', () => {
         .put(`/api/v2/notes/${forbiddenNoteId}`)
         .set('Content-Type', 'text/markdown')
         .send(changedContent)
-        .expect(400);
+        .expect(404);
     });
     it('fails with a non-existing alias', async () => {
       await request(testSetup.app.getHttpServer())
@@ -289,7 +289,7 @@ describe('Notes', () => {
     it('fails with a forbidden alias', async () => {
       await request(testSetup.app.getHttpServer())
         .get(`/api/v2/notes/${forbiddenNoteId}/metadata`)
-        .expect(400);
+        .expect(404);
     });
 
     it('fails with non-existing alias', async () => {
@@ -335,7 +335,7 @@ describe('Notes', () => {
     it('fails with a forbidden alias', async () => {
       await request(testSetup.app.getHttpServer())
         .get(`/api/v2/notes/${forbiddenNoteId}/revisions`)
-        .expect(400);
+        .expect(404);
     });
 
     it('fails with non-existing alias', async () => {
@@ -365,7 +365,7 @@ describe('Notes', () => {
     it('fails with a forbidden alias', async () => {
       await request(testSetup.app.getHttpServer())
         .get(`/api/v2/notes/${forbiddenNoteId}/revisions/1`)
-        .expect(400);
+        .expect(404);
     });
     it('fails with non-existing alias', async () => {
       // check if a missing note correctly returns 404
@@ -387,7 +387,7 @@ describe('Notes', () => {
     it('fails with a forbidden alias', async () => {
       await request(testSetup.app.getHttpServer())
         .get(`/api/v2/notes/${forbiddenNoteId}/content`)
-        .expect(400);
+        .expect(404);
     });
     it('fails with non-existing alias', async () => {
       // check if a missing note correctly returns 404

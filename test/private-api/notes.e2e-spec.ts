@@ -114,7 +114,7 @@ describe('Notes', () => {
         .set('Content-Type', 'text/markdown')
         .send(content)
         .expect('Content-Type', /json/)
-        .expect(400);
+        .expect(409);
     });
 
     it('fails with a existing alias', async () => {
@@ -123,7 +123,7 @@ describe('Notes', () => {
         .set('Content-Type', 'text/markdown')
         .send(content)
         .expect('Content-Type', /json/)
-        .expect(400);
+        .expect(409);
     });
   });
 
@@ -189,7 +189,7 @@ describe('Notes', () => {
       });
     });
     it('fails with a forbidden alias', async () => {
-      await agent.delete(`/api/private/notes/${forbiddenNoteId}`).expect(400);
+      await agent.delete(`/api/private/notes/${forbiddenNoteId}`).expect(404);
     });
     it('fails with a non-existing alias', async () => {
       await agent.delete('/api/private/notes/i_dont_exist').expect(404);
@@ -209,7 +209,7 @@ describe('Notes', () => {
     it('fails with a forbidden alias', async () => {
       await agent
         .get(`/api/private/notes/${forbiddenNoteId}/revisions`)
-        .expect(400);
+        .expect(404);
     });
 
     it('fails with non-existing alias', async () => {
@@ -248,7 +248,7 @@ describe('Notes', () => {
     it('fails with a forbidden alias', async () => {
       await agent
         .delete(`/api/private/notes/${forbiddenNoteId}/revisions`)
-        .expect(400);
+        .expect(404);
     });
     it('fails with non-existing alias', async () => {
       // check if a missing note correctly returns 404
@@ -276,7 +276,7 @@ describe('Notes', () => {
     it('fails with a forbidden alias', async () => {
       await agent
         .get(`/api/private/notes/${forbiddenNoteId}/revisions/1`)
-        .expect(400);
+        .expect(404);
     });
     it('fails with non-existing alias', async () => {
       // check if a missing note correctly returns 404

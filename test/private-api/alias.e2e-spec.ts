@@ -83,7 +83,7 @@ describe('Alias', () => {
           .post(`/api/private/alias`)
           .set('Content-Type', 'application/json')
           .send(newAliasDto)
-          .expect(400)
+          .expect(409)
           .then((response) => {
             expect(response.body.message).toContain(
               'is forbidden by the administrator',
@@ -96,7 +96,7 @@ describe('Alias', () => {
           .post(`/api/private/alias`)
           .set('Content-Type', 'application/json')
           .send(newAliasDto)
-          .expect(400);
+          .expect(409);
       });
       it('because the user is not an owner', async () => {
         newAliasDto.newAlias = publicId;
@@ -156,7 +156,7 @@ describe('Alias', () => {
           .put(`/api/private/alias/${forbiddenNoteId}`)
           .set('Content-Type', 'application/json')
           .send(changeAliasDto)
-          .expect(400)
+          .expect(404)
           .then((response) => {
             expect(response.body.message).toContain(
               'is forbidden by the administrator',
@@ -217,7 +217,7 @@ describe('Alias', () => {
     it('does not delete an alias of a forbidden note', async () => {
       await agent1
         .delete(`/api/private/alias/${forbiddenNoteId}`)
-        .expect(400)
+        .expect(404)
         .then((response) => {
           expect(response.body.message).toContain(
             'is forbidden by the administrator',
@@ -230,7 +230,7 @@ describe('Alias', () => {
     });
 
     it('does not delete an primary alias (if it is not the only one)', async () => {
-      await agent1.delete(`/api/private/alias/${testAlias}`).expect(400);
+      await agent1.delete(`/api/private/alias/${testAlias}`).expect(422);
       await agent1.get(`/api/private/notes/${newAlias}`).expect(200);
     });
 
