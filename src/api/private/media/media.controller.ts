@@ -38,7 +38,7 @@ import {
 } from '../../../errors/errors';
 import { SessionGuard } from '../../../identity/session.guard';
 import { ConsoleLoggerService } from '../../../logger/console-logger.service';
-import { MediaUploadUrlDto } from '../../../media/media-upload-url.dto';
+import { MediaUploadDto } from '../../../media/media-upload.dto';
 import { MediaService } from '../../../media/media.service';
 import { MulterFile } from '../../../media/multer-file.interface';
 import { Note } from '../../../notes/note.entity';
@@ -83,7 +83,7 @@ export class MediaController {
   })
   @ApiCreatedResponse({
     description: 'The file was uploaded successfully',
-    type: MediaUploadUrlDto,
+    type: MediaUploadDto,
   })
   @ApiUnauthorizedResponse({ description: unauthorizedDescription })
   @ApiForbiddenResponse({ description: forbiddenDescription })
@@ -93,7 +93,7 @@ export class MediaController {
     @UploadedFile() file: MulterFile,
     @Headers('HedgeDoc-Note') noteId: string,
     @RequestUser() user: User,
-  ): Promise<MediaUploadUrlDto> {
+  ): Promise<MediaUploadDto> {
     try {
       // TODO: Move getting the Note object into a decorator
       const note: Note = await this.noteService.getNoteByIdOrAlias(noteId);
@@ -101,8 +101,8 @@ export class MediaController {
         `Recieved filename '${file.originalname}' for note '${noteId}' from user '${user.username}'`,
         'uploadMedia',
       );
-      const url = await this.mediaService.saveFile(file.buffer, user, note);
-      return this.mediaService.toMediaUploadUrlDto(url);
+      const upload = await this.mediaService.saveFile(file.buffer, user, note);
+      return await this.mediaService.toMediaUploadDto(upload);
     } catch (e) {
       if (e instanceof ClientError || e instanceof NotInDBError) {
         throw new BadRequestException(e.message);
