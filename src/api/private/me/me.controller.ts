@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -54,7 +55,15 @@ export class MeController {
 
   @Delete()
   @HttpCode(204)
-  async deleteUser(@RequestUser() user: User): Promise<void> {
+  async deleteUser(
+    @RequestUser() user: User,
+    @Body('username') username: string,
+  ): Promise<void> {
+    if (user.username !== username) {
+      throw new BadRequestException(
+        'Username must be included in the request body for verification',
+      );
+    }
     const mediaUploads = await this.mediaService.listUploadsByUser(user);
     for (const mediaUpload of mediaUploads) {
       await this.mediaService.deleteFile(mediaUpload);

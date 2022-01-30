@@ -129,7 +129,13 @@ describe('Me', () => {
     const mediaUploads = await testSetup.mediaService.listUploadsByUser(dbUser);
     expect(mediaUploads).toHaveLength(1);
     expect(mediaUploads[0].fileUrl).toEqual(upload.fileUrl);
-    await agent.delete('/api/private/me').expect(204);
+    // this request should fail
+    await agent.delete('/api/private/me').expect(400);
+    // this request should succeed
+    await agent
+      .delete('/api/private/me')
+      .send({ username: 'hardcoded' })
+      .expect(204);
     await expect(
       testSetup.userService.getUserByUsername('hardcoded'),
     ).rejects.toThrow(NotInDBError);
