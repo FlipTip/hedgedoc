@@ -55,13 +55,16 @@
                     <% if (errorMessage && errorMessage.length > 0) { %>
                     <div class="alert alert-danger" style="max-width: 400px; margin: 0 auto;"><%= errorMessage %></div>
                     <% } %>
-                    <% if (authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.saml || authProviders.oauth2 || authProviders.email) { %>
-                    <span class="ui-signin">
-                        <br>
-                        <a type="button" class="btn btn-lg btn-success ui-signin" data-toggle="modal" data-target=".signin-modal" style="min-width: 200px;"><%= __('Sign In') %></a>
-                    </span>
-                    <span class="ui-or"><%= __('or') %></span>
-                    <% } %>
+                    
+                  /**
+                    * <% if (authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.saml || authProviders.oauth2 || authProviders.email) { %>
+                    * <span class="ui-signin">
+                    *    <br>
+                    *    <a type="button" class="btn btn-lg btn-success ui-signin" data-toggle="modal" data-target=".signin-modal" style="min-width: 200px;"><%= __('Sign In') %></a>
+                    * </span>
+                    * <span class="ui-or"><%= __('or') %></span>
+                    * <% } %>
+                    */
                     <span class="ui-signin">
                         <a type="button" href="<%- serverURL %>/features" class="btn btn-lg btn-primary" style="min-width: 200px;"><%= __('Explore all features') %></a>
                         <br>
